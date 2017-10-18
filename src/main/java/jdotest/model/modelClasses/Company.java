@@ -30,10 +30,10 @@ public class Company {
     
     @Column(name = "CompanyId", allowsNull = "false")
     @Key(mappedBy = "DataType")
-    private Map<CompaniesOptionalDataType, CompanyOptionalData> optionalData;
-
+    @SuppressWarnings("FieldMayBeFinal")
+    private Map<CompaniesOptionalDataType, CompanyOptionalData> optionalData = new HashMap<>();
+   
     public Company(CompanyMapBase company) {
-        optionalData = new HashMap<>();
         setFrom(company);
     }
     

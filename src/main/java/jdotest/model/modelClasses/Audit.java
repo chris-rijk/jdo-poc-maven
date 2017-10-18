@@ -1,0 +1,47 @@
+package jdotest.model.modelClasses;
+
+import java.sql.Timestamp;
+import java.time.Instant;
+import javax.jdo.annotations.Extension;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.PrimaryKey;
+import jdotest.dto.enums.AuditType;
+
+@PersistenceCapable(table = "Audits")
+public class Audit {
+    @PrimaryKey
+    @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
+    private long Id;
+    @Persistent(customValueStrategy="timestamp", valueStrategy=IdGeneratorStrategy.UNSPECIFIED)
+    private Timestamp DateTime;
+    @Extension(vendorName = "datanucleus", key = "enum-value-getter", value = "getValue")
+    @SuppressWarnings("FieldMayBeFinal")
+    private AuditType AuditType;
+    @Persistent(mappedBy="audit")
+    private AuditServiceInstance AuditServiceInstance;
+    
+    public Audit(AuditType AuditType) {
+        this.AuditType = AuditType;
+    }
+
+    public AuditServiceInstance CreateAuditServiceInstance(String ipAddress, String dockerImage){ 
+        AuditServiceInstance = new AuditServiceInstance(this, ipAddress, dockerImage);
+        return AuditServiceInstance;
+    }
+    
+    public long getId() {
+        return Id;
+    }
+
+    public Instant getCreateDateTime() {
+        return DateTime.toInstant();
+    }
+
+    public AuditType getAuditType() {
+        return AuditType;
+    }
+    
+    
+}

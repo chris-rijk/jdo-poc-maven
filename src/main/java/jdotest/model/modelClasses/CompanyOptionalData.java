@@ -14,6 +14,7 @@ public class CompanyOptionalData {
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     private long Id;
     @Extension(vendorName = "datanucleus", key = "enum-value-getter", value = "getValue")
+    @SuppressWarnings("FieldMayBeFinal")
     private CompaniesOptionalDataType DataType;
     private String Value;
 
