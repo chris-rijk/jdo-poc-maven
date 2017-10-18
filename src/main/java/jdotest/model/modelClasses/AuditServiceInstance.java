@@ -4,6 +4,7 @@ import javax.jdo.annotations.Column;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.PrimaryKey;
 import jdotest.dto.AuditServiceInstancesMap;
+import jdotest.dto.AuditServiceInstancesMapBase;
 
 @PersistenceCapable(table = "AuditsServiceInstances")
 public class AuditServiceInstance {
@@ -17,10 +18,10 @@ public class AuditServiceInstance {
     @SuppressWarnings("FieldMayBeFinal")
     private String DockerImage;
     
-    public AuditServiceInstance(Audit audit, String ipAddress, String dockerImage) {
+    public AuditServiceInstance(Audit audit, AuditServiceInstancesMapBase serviceInstance) {
         this.audit = audit;
-        this.IpAddress = ipAddress;
-        this.DockerImage = dockerImage;
+        this.IpAddress = serviceInstance.getIpAddress();
+        this.DockerImage = serviceInstance.getDockerImage();
     }
 
     public AuditServiceInstancesMap toAuditServiceInstancesMap() {

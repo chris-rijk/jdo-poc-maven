@@ -7,6 +7,7 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
+import jdotest.dto.AuditServiceInstancesMapBase;
 import jdotest.dto.enums.AuditType;
 
 @PersistenceCapable(table = "Audits")
@@ -26,8 +27,8 @@ public class Audit {
         this.AuditType = AuditType;
     }
 
-    public AuditServiceInstance CreateAuditServiceInstance(String ipAddress, String dockerImage){ 
-        AuditServiceInstance = new AuditServiceInstance(this, ipAddress, dockerImage);
+    public AuditServiceInstance CreateAuditServiceInstance(AuditServiceInstancesMapBase serviceInstance){ 
+        AuditServiceInstance = new AuditServiceInstance(this, serviceInstance);
         return AuditServiceInstance;
     }
     

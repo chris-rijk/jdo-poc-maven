@@ -2,6 +2,7 @@ package jdotest.model.database;
 
 import java.time.Instant;
 import jdotest.dto.AuditServiceInstancesMap;
+import jdotest.dto.AuditServiceInstancesMapBase;
 import jdotest.dto.enums.AuditType;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -44,7 +45,7 @@ public class AuditInstancesServiceTest {
         AuditInstancesService instance = new AuditInstancesService();
 
         Instant before = Instant.now();
-        AuditServiceInstancesMap result = instance.CreateInstancesAudit("ip address", "docker");
+        AuditServiceInstancesMap result = instance.CreateInstancesAudit(new AuditServiceInstancesMapBase("ip address", "docker"));
         Instant after = Instant.now();
 
         assertTrue(result.getAuditId() > 0);
