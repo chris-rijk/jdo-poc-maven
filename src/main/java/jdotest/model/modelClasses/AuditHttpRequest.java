@@ -4,7 +4,7 @@ import javax.jdo.annotations.Column;
 import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.PrimaryKey;
-import jdotest.dto.AuditHttpRequestsMap;
+import jdotest.dto.AuditHttpRequestMap;
 import jdotest.dto.AuditHttpRequestsMapBase;
 import jdotest.dto.enums.HttpRequestSourceType;
 import jdotest.dto.enums.HttpRequestType;
@@ -45,13 +45,7 @@ public class AuditHttpRequest {
         this.requestSourceType = httpRequest.getRequestSourceType();
     }
 
-    public AuditHttpRequestsMap toAuditHttpRequestsMap() {
-        return new AuditHttpRequestsMap(audit.getId(), audit.getCreateDateTime(), audit.getAuditType(), ServiceInstanceId, url, body, requestType, requestSourceType);
+    public AuditHttpRequestMap toAuditHttpRequestsMap() {
+        return new AuditHttpRequestMap(audit.getId(), audit.getCreateDateTime(), audit.getAuditType(), ServiceInstanceId, url, body, requestType, requestSourceType);
     }
-
-    public Audit getAudit() {
-        return audit;
-    }
-
-
 }

@@ -6,13 +6,13 @@ import jdotest.dto.enums.AuditType;
 import jdotest.dto.enums.HttpRequestSourceType;
 import jdotest.dto.enums.HttpRequestType;
 
-public class AuditHttpRequestsMap extends AuditHttpRequestsMapBase {
+public class AuditHttpRequestMap extends AuditHttpRequestsMapBase {
 
     private final long AuditId;
     private final Instant CreateDateTime;
     private final AuditType AuditType;
 
-    public AuditHttpRequestsMap(long AuditId, Instant CreateDateTime, AuditType AuditType, long ServiceInstanceId, String url, String body, HttpRequestType requestType, HttpRequestSourceType requestSourceType) {
+    public AuditHttpRequestMap(long AuditId, Instant CreateDateTime, AuditType AuditType, long ServiceInstanceId, String url, String body, HttpRequestType requestType, HttpRequestSourceType requestSourceType) {
         super(ServiceInstanceId, url, body, requestType, requestSourceType);
         this.AuditId = AuditId;
         this.CreateDateTime = CreateDateTime;
@@ -52,7 +52,7 @@ public class AuditHttpRequestsMap extends AuditHttpRequestsMapBase {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final AuditHttpRequestsMap other = (AuditHttpRequestsMap) obj;
+        final AuditHttpRequestMap other = (AuditHttpRequestMap) obj;
         if (this.AuditId != other.AuditId) {
             return false;
         }
