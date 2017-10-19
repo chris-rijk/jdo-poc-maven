@@ -10,11 +10,16 @@ import jdotest.dto.AuditServiceInstancesMapBase;
 public class AuditServiceInstance {
     
     @PrimaryKey
-    @Column(name="AuditId")
+    long AuditId;
+
+    @Column(name="AuditId", allowsNull = "false")
+    //@Persistent(valueStrategy = IdGeneratorStrategy.UNSPECIFIED)
     @SuppressWarnings("FieldMayBeFinal")
     private Audit audit;
+
     @SuppressWarnings("FieldMayBeFinal")
     private String IpAddress;
+
     @SuppressWarnings("FieldMayBeFinal")
     private String DockerImage;
     
@@ -28,4 +33,15 @@ public class AuditServiceInstance {
         return new AuditServiceInstancesMap(audit.getId(), audit.getCreateDateTime(), audit.getAuditType(), IpAddress, DockerImage);
     }
 
+    public Audit getAudit() {
+        return audit;
+    }
+
+    public String getIpAddress() {
+        return IpAddress;
+    }
+
+    public String getDockerImage() {
+        return DockerImage;
+    }
 }

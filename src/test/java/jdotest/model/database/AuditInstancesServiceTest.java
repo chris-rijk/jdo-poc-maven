@@ -55,7 +55,7 @@ public class AuditInstancesServiceTest {
         assertEquals("docker", result.getDockerImage());
         assertEquals(AuditType.ServiceInstance, result.getAuditType());
 
-        //CompanyMap lookup = instance.GetCompany(result.getId());
-        //assertEquals(result, lookup);
+        AuditServiceInstancesMap lookup = instance.GetInstancesAudit(result.getAuditId());
+        assertEquals(result, lookup);
     }
 }

@@ -15,21 +15,20 @@ public class Audit {
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     private long Id;
+
     @Persistent(customValueStrategy="timestamp", valueStrategy=IdGeneratorStrategy.UNSPECIFIED)
     private Timestamp DateTime;
+
     @Extension(vendorName = "datanucleus", key = "enum-value-getter", value = "getValue")
     @SuppressWarnings("FieldMayBeFinal")
     private AuditType AuditType;
-    @Persistent(mappedBy="audit")
-    private AuditServiceInstance AuditServiceInstance;
     
     public Audit(AuditType AuditType) {
         this.AuditType = AuditType;
     }
 
     public AuditServiceInstance CreateAuditServiceInstance(AuditServiceInstancesMapBase serviceInstance){ 
-        AuditServiceInstance = new AuditServiceInstance(this, serviceInstance);
-        return AuditServiceInstance;
+        return new AuditServiceInstance(this, serviceInstance);
     }
     
     public long getId() {
@@ -43,6 +42,4 @@ public class Audit {
     public AuditType getAuditType() {
         return AuditType;
     }
-    
-    
 }

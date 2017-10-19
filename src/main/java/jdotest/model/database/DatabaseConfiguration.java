@@ -16,6 +16,7 @@ public class DatabaseConfiguration {
         properties.put("datanucleus.ConnectionPassword", "jdoPassword");
         properties.put("datanucleus.schema.autoCreateAll", "false");
         properties.put("datanucleus.identifier.case", "MixedCase");
+        properties.put("datanucleus.rdbms.allowColumnReuse", "true");
 
         PMF = JDOHelper.getPersistenceManagerFactory(properties);
     }

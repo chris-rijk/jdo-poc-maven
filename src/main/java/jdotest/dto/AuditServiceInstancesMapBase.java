@@ -1,6 +1,9 @@
 package jdotest.dto;
 
+import java.util.Objects;
+
 public class AuditServiceInstancesMapBase {
+
     private final String IpAddress;
     private final String DockerImage;
 
@@ -15,5 +18,31 @@ public class AuditServiceInstancesMapBase {
 
     public String getDockerImage() {
         return DockerImage;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 29 * hash + Objects.hashCode(this.IpAddress);
+        hash = 29 * hash + Objects.hashCode(this.DockerImage);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final AuditServiceInstancesMapBase other = (AuditServiceInstancesMapBase) obj;
+        if (!Objects.equals(this.IpAddress, other.IpAddress)) {
+            return false;
+        }
+        return Objects.equals(this.DockerImage, other.DockerImage);
     }
 }
