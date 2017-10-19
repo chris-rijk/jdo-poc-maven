@@ -49,8 +49,7 @@ public class AuditInstancesServiceTest {
         Instant after = Instant.now();
 
         assertTrue(result.getAuditId() > 0);
-        assertTrue(result.getCreateDateTime().isAfter(before));
-        assertTrue(result.getCreateDateTime().isBefore(after));
+        TestUtils.assertInRange(before, result.getCreateDateTime(), after);
         assertEquals("ip address", result.getIpAddress());
         assertEquals("docker", result.getDockerImage());
         assertEquals(AuditType.ServiceInstance, result.getAuditType());

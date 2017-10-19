@@ -13,7 +13,6 @@ public class AuditServiceInstance {
     long AuditId;
 
     @Column(name="AuditId", allowsNull = "false")
-    //@Persistent(valueStrategy = IdGeneratorStrategy.UNSPECIFIED)
     @SuppressWarnings("FieldMayBeFinal")
     private Audit audit;
 

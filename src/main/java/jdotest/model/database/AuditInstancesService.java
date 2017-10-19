@@ -17,7 +17,7 @@ public class AuditInstancesService implements IAuditInstancesService {
         try (PersistenceManager pm = DatabaseConfiguration.getPersistenceManager()) {
             Audit a = new Audit(AuditType.ServiceInstance);
             pm.makePersistent(a);
-            AuditServiceInstance asi = a.CreateAuditServiceInstance(serviceInstance);
+            AuditServiceInstance asi = new AuditServiceInstance(a, serviceInstance);
             pm.makePersistent(asi);
             ret = asi.toAuditServiceInstancesMap();
         }

@@ -7,7 +7,6 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
-import jdotest.dto.AuditServiceInstancesMapBase;
 import jdotest.dto.enums.AuditType;
 
 @PersistenceCapable(table = "Audits")
@@ -25,10 +24,6 @@ public class Audit {
     
     public Audit(AuditType AuditType) {
         this.AuditType = AuditType;
-    }
-
-    public AuditServiceInstance CreateAuditServiceInstance(AuditServiceInstancesMapBase serviceInstance){ 
-        return new AuditServiceInstance(this, serviceInstance);
     }
     
     public long getId() {
