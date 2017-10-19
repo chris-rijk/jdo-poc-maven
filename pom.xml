@@ -207,7 +207,7 @@
                 <version>3.7.0</version>
                 <configuration>
                     <compilerArgs>
-                        <arg>-Xlint:all</arg>
+                       <!-- <arg>-Xlint:all</arg> -->
                     </compilerArgs>
                 </configuration>
             </plugin>

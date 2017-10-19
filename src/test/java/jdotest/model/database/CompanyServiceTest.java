@@ -16,22 +16,22 @@ import org.junit.Test;
  * @author crijk
  */
 public class CompanyServiceTest {
-    
+
     public CompanyServiceTest() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
     public void setUp() {
     }
-    
+
     @After
     public void tearDown() {
     }
@@ -62,12 +62,12 @@ public class CompanyServiceTest {
     public void testUpdateCompany() {
         CompanyMapBase company = new CompanyMapBase("Company name", CompanyStatusType.Enabled, "platform");
         CompanyMapBase updated = new CompanyMapBase("new name", CompanyStatusType.Disabled, "new platform");
-        
+
         CompanyService instance = new CompanyService();
         CompanyMap result = instance.CreateCompany(company);
         boolean done = instance.UpdateCompany(result.getId(), updated);
         CompanyMap lookup = instance.GetCompany(result.getId());
-        
+
         assertTrue(done);
         assertEquals(updated.getStatusType(), lookup.getStatusType());
         assertEquals(updated.getName(), lookup.getName());
@@ -89,5 +89,4 @@ public class CompanyServiceTest {
             assertNotNull(ex);
         }
     }
-    
 }
