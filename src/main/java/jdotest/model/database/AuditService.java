@@ -9,8 +9,8 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 import jdotest.dto.AuditHttpRequestMap;
 import jdotest.dto.AuditServiceInstancesMap;
+import jdotest.dto.DiagnosticAuditMap;
 import jdotest.dto.enums.AuditType;
-import jdotest.dto.enums.DiagnosticType;
 import jdotest.dto.enums.NameValuePairType;
 import jdotest.model.interfaces.IAuditHttpRequestsService;
 import jdotest.model.interfaces.IAuditInstancesService;
@@ -19,6 +19,7 @@ import jdotest.model.modelClasses.Audit;
 import jdotest.model.modelClasses.AuditHttpRequest;
 import jdotest.model.modelClasses.AuditNameValuePair;
 import jdotest.model.modelClasses.AuditServiceInstance;
+import jdotest.model.modelClasses.DiagnosticAudit;
 
 public class AuditService implements IAuditService {
 
@@ -75,21 +76,6 @@ public class AuditService implements IAuditService {
     }
 
     @Override
-    public void SetAuditNameValuePairs(long auditId, NameValuePairType dataType, Map<String, String> pairs) {
-        try (PersistenceManager pm = DatabaseConfiguration.getPersistenceManager()) {
-            Query<AuditNameValuePair> query = pm.newQuery(AuditNameValuePair.class, "AuditId == auditId && DataType == dataType");
-            query.parameters("long auditId, int dataType");
-            query.deletePersistentAll(auditId, dataType.getValue());
-            ArrayList<AuditNameValuePair> list = new ArrayList<>();
-            for (Map.Entry<String, String> pair : pairs.entrySet()) {
-                AuditNameValuePair add = new AuditNameValuePair(auditId, dataType, pair.getKey(), pair.getValue());
-                list.add(add);
-            }
-            pm.makePersistentAll(list);
-        }
-    }
-
-    @Override
     public Map<String, String> GetAuditNameValuePairs(long auditId, NameValuePairType dataType) {
         HashMap<String, String> ret = new HashMap<>();
         try (PersistenceManager pm = DatabaseConfiguration.getPersistenceManager()) {
@@ -104,7 +90,17 @@ public class AuditService implements IAuditService {
     }
 
     @Override
-    public void AuditDiagnostics(long auditId, DiagnosticType diagnosticType, String message) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public List<DiagnosticAuditMap> GetDiagnosticAudits(long auditId) {
+        List<DiagnosticAuditMap> ret = new ArrayList<>();
+        try (PersistenceManager pm = DatabaseConfiguration.getPersistenceManager()) {
+            Query<DiagnosticAudit> query = pm.newQuery(DiagnosticAudit.class, "AuditId == auditId");
+            query.parameters("long auditId");
+            query.orderBy("DateTime");
+            List<DiagnosticAudit> results = (List<DiagnosticAudit>) query.execute(auditId);
+            for (DiagnosticAudit entry : results) {
+                ret.add(entry.toDiagnosticAuditMap());
+            }
+        }
+        return ret;
     }
 }

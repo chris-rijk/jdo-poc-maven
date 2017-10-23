@@ -7,19 +7,10 @@ import jdotest.model.interfaces.IAuditInstancesService;
 import jdotest.model.modelClasses.Audit;
 import jdotest.model.modelClasses.AuditServiceInstance;
 
-public class AuditInstancesService implements IAuditInstancesService {
+public class AuditInstancesService extends AuditHandlerCommon implements IAuditInstancesService {
 
-    private final Audit audit;
-    private final long auditId;
-
-    protected AuditInstancesService(Audit audit) {
-        this.audit = audit;
-        this.auditId = audit.getId();
-    }
-
-    @Override
-    public long GetAuditId() {
-        return auditId;
+    public AuditInstancesService(Audit audit) {
+        super(audit);
     }
 
     @Override

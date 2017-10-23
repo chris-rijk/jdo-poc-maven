@@ -9,7 +9,7 @@ import jdotest.dto.AuditHttpResponseMapBase;
  *
  * @author crijk
  */
-public interface IAuditHttpRequestsService {
+public interface IAuditHttpRequestsService extends IAuditHandlerCommon {
     long GetAuditId();
     AuditHttpRequestMap StartHttpRequest(AuditHttpRequestsMapBase httpRequest);
     AuditHttpResponseMap SetHttpResponse(AuditHttpResponseMapBase httpResponse);

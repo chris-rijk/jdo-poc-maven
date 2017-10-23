@@ -10,19 +10,10 @@ import jdotest.model.modelClasses.Audit;
 import jdotest.model.modelClasses.AuditHttpRequest;
 import jdotest.model.modelClasses.AuditHttpResponse;
 
-public class AuditHttpRequestsService implements IAuditHttpRequestsService {
+public class AuditHttpRequestsService extends AuditHandlerCommon implements IAuditHttpRequestsService {
 
-    private final Audit audit;
-    private final long auditId;
-
-    protected AuditHttpRequestsService(Audit audit) {
-        this.audit = audit;
-        this.auditId = audit.getId();
-    }
-
-    @Override
-    public long GetAuditId() {
-        return auditId;
+    public AuditHttpRequestsService(Audit audit) {
+        super(audit);
     }
 
     @Override
