@@ -1,6 +1,5 @@
 package jdotest.model.modelClasses;
 
-import javax.jdo.annotations.Column;
 import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.PrimaryKey;
@@ -14,10 +13,6 @@ public class AuditHttpRequest {
     
     @PrimaryKey
     long AuditId;
-
-    @Column(name="AuditId", allowsNull = "false")
-    @SuppressWarnings("FieldMayBeFinal")
-    private Audit audit;
 
     @SuppressWarnings("FieldMayBeFinal")
     private long ServiceInstanceId;
@@ -36,8 +31,8 @@ public class AuditHttpRequest {
     @SuppressWarnings("FieldMayBeFinal")
     private HttpRequestSourceType requestSourceType;
    
-    public AuditHttpRequest(Audit audit, AuditHttpRequestsMapBase httpRequest) {
-        this.audit = audit;
+    public AuditHttpRequest(long auditId, AuditHttpRequestsMapBase httpRequest) {
+        this.AuditId = auditId;
         this.ServiceInstanceId = httpRequest.getServiceInstanceId();
         this.url = httpRequest.getURI().toString();
         this.body = httpRequest.getBody();
@@ -45,7 +40,7 @@ public class AuditHttpRequest {
         this.requestSourceType = httpRequest.getRequestSourceType();
     }
 
-    public AuditHttpRequestMap toAuditHttpRequestsMap() {
+    public AuditHttpRequestMap toAuditHttpRequestsMap(Audit audit) {
         return new AuditHttpRequestMap(audit.getId(), audit.getCreateDateTime(), audit.getAuditType(), ServiceInstanceId, url, body, requestType, requestSourceType);
     }
 }

@@ -10,6 +10,9 @@ import jdotest.dto.AuditServiceInstancesMapBase;
 import jdotest.dto.enums.HttpRequestSourceType;
 import jdotest.dto.enums.HttpRequestType;
 import jdotest.dto.enums.HttpResponseType;
+import jdotest.model.interfaces.IAuditHttpRequestsService;
+import jdotest.model.interfaces.IAuditInstancesService;
+import jdotest.model.interfaces.IAuditService;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;
@@ -49,12 +52,14 @@ public class AuditHttpRequestsServiceTest {
     public void testCreateHttpRequestsService() {
         System.out.println("testCreateHttpRequestsService");
 
-        AuditServiceInstancesMap serviceInstance = new AuditInstancesService().CreateInstancesAudit(new AuditServiceInstancesMapBase("ip address", "docker"));
-
-        AuditHttpRequestsService instance = new AuditHttpRequestsService();
+        IAuditService auditService = new AuditService();
+        IAuditInstancesService instancesService = auditService.CreateInstancesAudit();
+        IAuditHttpRequestsService requestsService = auditService.CreateHttpRequest();
+        
+        AuditServiceInstancesMap serviceInstance = instancesService.StartInstancesAudit(new AuditServiceInstancesMapBase("ip address", "docker"));
 
         Instant before = Instant.now();
-        AuditHttpRequestMap httpRequest = instance.CreateHttpRequest(new AuditHttpRequestsMapBase(serviceInstance.getAuditId(), "url", "body", HttpRequestType.Unknown, HttpRequestSourceType.Test));
+        AuditHttpRequestMap httpRequest = requestsService.StartHttpRequest(new AuditHttpRequestsMapBase(serviceInstance.getAuditId(), "url", "body", HttpRequestType.Unknown, HttpRequestSourceType.Test));
         Instant after = Instant.now();
        
         assertTrue(httpRequest.getAuditId() > 0);
@@ -64,11 +69,11 @@ public class AuditHttpRequestsServiceTest {
         assertEquals(HttpRequestType.Unknown, httpRequest.getRequestType());
         assertEquals(HttpRequestSourceType.Test, httpRequest.getRequestSourceType());
 
-        AuditHttpRequestMap lookup = instance.GetHttpRequest(httpRequest.getAuditId());
+        AuditHttpRequestMap lookup = auditService.GetHttpRequest(httpRequest.getAuditId());
         assertEquals(httpRequest, lookup);
 
         before = after;
-        AuditHttpResponseMap httpResponse = instance.SetHttpResponse(httpRequest.getAuditId(), new AuditHttpResponseMapBase(HttpResponseType.Unknown, 200, "response body"));
+        AuditHttpResponseMap httpResponse = requestsService.SetHttpResponse(new AuditHttpResponseMapBase(HttpResponseType.Unknown, 200, "response body"));
         after = Instant.now();
         assertTrue(httpResponse.getRequestAuditId() > 0);
         TestUtils.assertInRange(before, httpResponse.getResponseTime(), after);

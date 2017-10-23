@@ -1,12 +1,10 @@
 package jdotest.model.database;
 
-import javax.jdo.JDOObjectNotFoundException;
 import javax.jdo.PersistenceManager;
 import jdotest.dto.AuditHttpRequestMap;
 import jdotest.dto.AuditHttpRequestsMapBase;
 import jdotest.dto.AuditHttpResponseMap;
 import jdotest.dto.AuditHttpResponseMapBase;
-import jdotest.dto.enums.AuditType;
 import jdotest.model.interfaces.IAuditHttpRequestsService;
 import jdotest.model.modelClasses.Audit;
 import jdotest.model.modelClasses.AuditHttpRequest;
@@ -14,43 +12,38 @@ import jdotest.model.modelClasses.AuditHttpResponse;
 
 public class AuditHttpRequestsService implements IAuditHttpRequestsService {
 
+    private final Audit audit;
+    private final long auditId;
+
+    protected AuditHttpRequestsService(Audit audit) {
+        this.audit = audit;
+        this.auditId = audit.getId();
+    }
+
     @Override
-    public AuditHttpRequestMap CreateHttpRequest(AuditHttpRequestsMapBase httpRequest) {
+    public long GetAuditId() {
+        return auditId;
+    }
+
+    @Override
+    public AuditHttpRequestMap StartHttpRequest(AuditHttpRequestsMapBase httpRequest) {
         AuditHttpRequestMap ret;
         try (PersistenceManager pm = DatabaseConfiguration.getPersistenceManager()) {
-            Audit a = new Audit(AuditType.HttpRequest);
-            pm.makePersistent(a);
-            AuditHttpRequest req = new AuditHttpRequest(a, httpRequest);
+            AuditHttpRequest req = new AuditHttpRequest(auditId, httpRequest);
             pm.makePersistent(req);
-            ret = req.toAuditHttpRequestsMap();
+            ret = req.toAuditHttpRequestsMap(audit);
         }
 
         return ret;
     }
 
     @Override
-    public AuditHttpRequestMap GetHttpRequest(long id) throws JDOObjectNotFoundException {
-        AuditHttpRequestMap ret = null;
+    public AuditHttpResponseMap SetHttpResponse(AuditHttpResponseMapBase httpResponse) {
+        AuditHttpResponseMap ret;
         try (PersistenceManager pm = DatabaseConfiguration.getPersistenceManager()) {
-            AuditHttpRequest audit = pm.getObjectById(AuditHttpRequest.class, id);
-            if (audit != null) {
-                ret = audit.toAuditHttpRequestsMap();
-            }
-        }
-
-        return ret;
-    }
-
-    @Override
-    public AuditHttpResponseMap SetHttpResponse(long requestAuditId, AuditHttpResponseMapBase httpResponse) throws JDOObjectNotFoundException {
-        AuditHttpResponseMap ret = null;
-        try (PersistenceManager pm = DatabaseConfiguration.getPersistenceManager()) {
-            AuditHttpRequest audit = pm.getObjectById(AuditHttpRequest.class, requestAuditId);
-            if (audit != null) {
-                AuditHttpResponse response = new AuditHttpResponse(requestAuditId, httpResponse);
-                pm.makePersistent(response);
-                ret = response.toAuditHttpResponseMap();
-            }
+            AuditHttpResponse response = new AuditHttpResponse(auditId, httpResponse);
+            pm.makePersistent(response);
+            ret = response.toAuditHttpResponseMap();
         }
 
         return ret;

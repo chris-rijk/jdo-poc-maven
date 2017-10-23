@@ -7,6 +7,8 @@ import jdotest.dto.AuditServiceInstancesMap;
 import jdotest.dto.AuditServiceInstancesMapBase;
 import jdotest.dto.enums.AuditType;
 import jdotest.dto.enums.NameValuePairType;
+import jdotest.model.interfaces.IAuditInstancesService;
+import jdotest.model.interfaces.IAuditService;
 import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;
@@ -45,10 +47,11 @@ public class AuditInstancesServiceTest {
     @Test
     public void testCreateAuditInstancesService() {
         System.out.println("testCreateAuditInstancesService");
-        AuditInstancesService instance = new AuditInstancesService();
-
+        IAuditService auditService = new AuditService();
+        IAuditInstancesService instancesService = auditService.CreateInstancesAudit();
+       
         Instant before = Instant.now();
-        AuditServiceInstancesMap result = instance.CreateInstancesAudit(new AuditServiceInstancesMapBase("ip address", "docker"));
+        AuditServiceInstancesMap result = instancesService.StartInstancesAudit(new AuditServiceInstancesMapBase("ip address", "docker"));
         Instant after = Instant.now();
 
         assertTrue(result.getAuditId() > 0);
@@ -57,18 +60,18 @@ public class AuditInstancesServiceTest {
         assertEquals("docker", result.getDockerImage());
         assertEquals(AuditType.ServiceInstance, result.getAuditType());
 
-        AuditServiceInstancesMap lookup = instance.GetInstancesAudit(result.getAuditId());
+        AuditServiceInstancesMap lookup = auditService.GetInstancesAudit(result.getAuditId());
         assertEquals(result, lookup);
     }
 
     @Test
     public void testNameValuePairs() {
         System.out.println("CreateCompany");
-        AuditInstancesService instance = new AuditInstancesService();
-        AuditServiceInstancesMap result = instance.CreateInstancesAudit(new AuditServiceInstancesMapBase("ip address", "docker"));
+        IAuditService auditService = new AuditService();
+        IAuditInstancesService instancesService = auditService.CreateInstancesAudit();
+        AuditServiceInstancesMap result = instancesService.StartInstancesAudit(new AuditServiceInstancesMapBase("ip address", "docker"));
         long instanceId = result.getAuditId();
 
-        AuditService auditService = new AuditService();
         Map<String, String> results = auditService.GetAuditNameValuePairs(instanceId, NameValuePairType.HttpRequestHeaders);
         assertTrue(results.isEmpty());
 

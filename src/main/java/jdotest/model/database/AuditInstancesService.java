@@ -1,38 +1,34 @@
 package jdotest.model.database;
 
-import javax.jdo.JDOObjectNotFoundException;
 import javax.jdo.PersistenceManager;
 import jdotest.dto.AuditServiceInstancesMap;
 import jdotest.dto.AuditServiceInstancesMapBase;
-import jdotest.dto.enums.AuditType;
 import jdotest.model.interfaces.IAuditInstancesService;
 import jdotest.model.modelClasses.Audit;
 import jdotest.model.modelClasses.AuditServiceInstance;
 
 public class AuditInstancesService implements IAuditInstancesService {
 
-    @Override
-    public AuditServiceInstancesMap CreateInstancesAudit(AuditServiceInstancesMapBase serviceInstance) {
-        AuditServiceInstancesMap ret;
-        try (PersistenceManager pm = DatabaseConfiguration.getPersistenceManager()) {
-            Audit a = new Audit(AuditType.ServiceInstance);
-            pm.makePersistent(a);
-            AuditServiceInstance asi = new AuditServiceInstance(a, serviceInstance);
-            pm.makePersistent(asi);
-            ret = asi.toAuditServiceInstancesMap();
-        }
+    private final Audit audit;
+    private final long auditId;
 
-        return ret;
+    protected AuditInstancesService(Audit audit) {
+        this.audit = audit;
+        this.auditId = audit.getId();
     }
 
     @Override
-    public AuditServiceInstancesMap GetInstancesAudit(long id) throws JDOObjectNotFoundException {
-        AuditServiceInstancesMap ret = null;
+    public long GetAuditId() {
+        return auditId;
+    }
+
+    @Override
+    public AuditServiceInstancesMap StartInstancesAudit(AuditServiceInstancesMapBase serviceInstance) {
+        AuditServiceInstancesMap ret;
         try (PersistenceManager pm = DatabaseConfiguration.getPersistenceManager()) {
-            AuditServiceInstance audit = pm.getObjectById(AuditServiceInstance.class, id);
-            if (audit != null) {
-                ret = audit.toAuditServiceInstancesMap();
-            }
+            AuditServiceInstance asi = new AuditServiceInstance(auditId, serviceInstance);
+            pm.makePersistent(asi);
+            ret = asi.toAuditServiceInstancesMap(audit);
         }
 
         return ret;
