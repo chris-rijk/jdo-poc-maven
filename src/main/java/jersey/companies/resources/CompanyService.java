@@ -1,9 +1,10 @@
 package jersey.companies.resources;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Request;
+import javax.ws.rs.core.Response;
 import jdotest.model.interfaces.IAuditInstancesService;
 import jersey.companies.Company;
 import jersey.companies.CompanyBase;
@@ -16,11 +17,12 @@ import jersey.companies.PagedCompanies;
 public class CompanyService implements ICompanyService {
 
     @Context
-    private HttpServletRequest req;
+    Request request;
     @Context
-    private ServletContext ctx;
+    Response response;
     @Context
-    private HttpServletResponse response;
+    ContainerRequestContext requestCtx;
+    
     @Context
     private IAuditInstancesService instancesService;
 
@@ -43,8 +45,9 @@ public class CompanyService implements ICompanyService {
     private void addMetadataHeaders() {
         // Todo: turn into response filter
         if (response != null) {
-            response.addDateHeader("ServiceResponseTime", System.currentTimeMillis());
-            response.addHeader("ServiceInstanceId", Long.toString(instancesService.GetAuditId()));
+            MultivaluedMap<String, Object> headers = response.getHeaders();
+            headers.add("ServiceResponseTime", System.currentTimeMillis());
+            headers.add("ServiceInstanceId", instancesService.GetAuditId());
         }
     }
 

@@ -11,6 +11,7 @@ import jdotest.model.interfaces.IAuditInstancesService;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
+import ta.microservices.common.service.jerseyfilters.RequestAuditingFilter;
 import ta.microservices.common.service.jerseyfilters.SecurityFilter;
 
 public class JerseyConfig extends ResourceConfig {
@@ -20,9 +21,14 @@ public class JerseyConfig extends ResourceConfig {
     final protected void RegisterDefault() {
         RegisterSerializer();
         RegisterSecurityRoleNames();
+        RegisterRequestAuditingFilter();
         RegisterJWTSecurityFilter();
         RegisterSwagger();
         RegisterInstancesService();
+    }
+
+    protected void RegisterRequestAuditingFilter() {
+        register(RequestAuditingFilter.class);
     }
 
     protected void RegisterJWTSecurityFilter() {

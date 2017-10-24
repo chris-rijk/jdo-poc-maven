@@ -1,23 +1,31 @@
 package ta.microservices.common.service.jerseyfilters;
 
-import ta.microservices.common.service.security.Authorizer;
-import ta.microservices.common.service.security.TokenUtil;
-
+import java.io.IOException;
 import javax.annotation.Priority;
 import javax.ws.rs.Priorities;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerRequestFilter;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.ext.Provider;
-import java.io.IOException;
+import jdotest.dto.enums.DiagnosticType;
+import ta.microservices.common.service.lifecycle.RequestAuditing;
+import ta.microservices.common.service.security.Authorizer;
+import ta.microservices.common.service.security.TokenUtil;
 
 @Provider
 @Priority(Priorities.AUTHENTICATION)
 public class SecurityFilter implements ContainerRequestFilter {
+
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
-        Authorizer authorizer = getAuthorisation(requestContext.getHeaderString(HttpHeaders.AUTHORIZATION));
+        String authHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
+
+        RequestAuditing ra = RequestAuditing.GetFromContext(requestContext);
+        ra.AuditDiagnostics(DiagnosticType.Authorisation, "Starting auth header processing on '" + authHeader + "'");
+
+        Authorizer authorizer = getAuthorisation(authHeader);
         if (authorizer == null) {
+            ra.AuditDiagnostics(DiagnosticType.Authorisation, "Using any authorizer");
             authorizer = Authorizer.AnyAuthorizer;
         }
         requestContext.setSecurityContext(authorizer);
@@ -34,7 +42,7 @@ public class SecurityFilter implements ContainerRequestFilter {
                     String[] roles = tu.getRoles();
                     int version = tu.getVersion();
                     if (name != null && roles.length != 0 && version != -1) {
-                        return new Authorizer(roles, name, tu.getExpiration(),true);
+                        return new Authorizer(roles, name, tu.getExpiration(), true);
                     }
                 }
             }
