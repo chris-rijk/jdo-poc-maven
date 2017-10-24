@@ -14,7 +14,7 @@ import jdotest.dto.enums.HttpResponseType;
 public class AuditHttpResponse {
 
     @PrimaryKey
-    long AuditId;
+    private long AuditId;
     
     @Persistent(customValueStrategy = "timestamp", valueStrategy = IdGeneratorStrategy.UNSPECIFIED)
     private Timestamp DateTime;

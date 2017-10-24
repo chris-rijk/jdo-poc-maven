@@ -1,7 +1,9 @@
 package jdotest.dto.enums;
 
 public enum HttpResponseType {
-    Unknown(0);
+    Unknown(0),
+    Success(1),
+    ServerError(2);
 
     private final int value;
 

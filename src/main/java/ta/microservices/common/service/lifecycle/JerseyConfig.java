@@ -12,6 +12,7 @@ import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import ta.microservices.common.service.jerseyfilters.RequestAuditingFilter;
+import ta.microservices.common.service.jerseyfilters.RequestResponseAuditingFilter;
 import ta.microservices.common.service.jerseyfilters.SecurityFilter;
 
 public class JerseyConfig extends ResourceConfig {
@@ -29,6 +30,7 @@ public class JerseyConfig extends ResourceConfig {
 
     protected void RegisterRequestAuditingFilter() {
         register(RequestAuditingFilter.class);
+        register(RequestResponseAuditingFilter.class);
     }
 
     protected void RegisterJWTSecurityFilter() {
