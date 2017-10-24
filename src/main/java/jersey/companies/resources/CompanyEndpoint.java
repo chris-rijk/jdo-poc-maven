@@ -1,20 +1,26 @@
 package jersey.companies.resources;
 
+import javax.jdo.JDOObjectNotFoundException;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
+import jdotest.dto.CompanyMap;
+import jdotest.dto.enums.HttpRequestType;
 import jdotest.model.interfaces.IAuditInstancesService;
+import jdotest.model.interfaces.ICompanyService;
 import jersey.companies.Company;
 import jersey.companies.CompanyBase;
 import jersey.companies.PagedCompanies;
+import ta.microservices.common.service.lifecycle.RequestAuditing;
 
 /**
  *
  * @author crijk
  */
-public class CompanyService implements ICompanyService {
+public class CompanyEndpoint implements ICompanyEndpoint {
 
     @Context
     Request request;
@@ -22,14 +28,25 @@ public class CompanyService implements ICompanyService {
     Response response;
     @Context
     ContainerRequestContext requestCtx;
-    
+
     @Context
     private IAuditInstancesService instancesService;
+    @Context
+    private ICompanyService companyService;
 
     @Override
     public Company get(long companyId) {
+        RequestAuditing ra = RequestAuditing.GetFromContext(requestCtx);
+        ra.StartHttpRequest(HttpRequestType.ComapanyGet);
         addMetadataHeaders();
-        return new Company(instancesService.GetAuditId(), "username", "platform");
+
+        CompanyMap c = null;
+        try {
+            c = companyService.GetCompany(companyId);
+        } catch (JDOObjectNotFoundException ex) {
+            throw new WebApplicationException(Response.Status.NOT_FOUND);
+        }
+        return new Company(c);
     }
 
     @Override

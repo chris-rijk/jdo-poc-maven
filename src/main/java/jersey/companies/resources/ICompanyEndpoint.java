@@ -18,7 +18,7 @@ import jersey.companies.PagedCompanies;
 @Api(value = "Service for Companies and Clients")
 @Path("/companies")
 @Produces(MediaType.APPLICATION_JSON)
-public interface ICompanyService {
+public interface ICompanyEndpoint {
 
     @GET
     @Path("{companyId}")

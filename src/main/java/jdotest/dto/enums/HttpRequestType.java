@@ -1,7 +1,8 @@
 package jdotest.dto.enums;
 
 public enum HttpRequestType {
-    Unknown(0);
+    Unknown(0),
+    ComapanyGet(1);
 
     private final int value;
 

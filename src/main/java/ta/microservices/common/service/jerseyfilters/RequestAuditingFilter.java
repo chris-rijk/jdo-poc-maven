@@ -21,8 +21,7 @@ public class RequestAuditingFilter implements ContainerRequestFilter {
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
         IAuditHttpRequestsService requestService = instancesService.CreateHttpRequest();
-        RequestAuditing ra = new RequestAuditing(requestService);
-        RequestAuditing.SetFromContext(requestContext, ra);
+        RequestAuditing ra = new RequestAuditing(requestContext, requestService);
         requestService.SetAuditNameValuePairs(NameValuePairType.HttpRequestHeaders, MultimapToMap.ToMap(requestContext.getHeaders()));
     }
 }
