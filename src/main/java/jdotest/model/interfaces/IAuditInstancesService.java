@@ -8,6 +8,6 @@ import jdotest.dto.AuditServiceInstancesMapBase;
  * @author crijk
  */
 public interface IAuditInstancesService extends IAuditHandlerCommon {
-    long GetAuditId();
     AuditServiceInstancesMap StartInstancesAudit(AuditServiceInstancesMapBase serviceInstance);
+    IAuditHttpRequestsService CreateHttpRequest();
 }

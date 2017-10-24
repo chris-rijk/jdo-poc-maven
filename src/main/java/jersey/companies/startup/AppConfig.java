@@ -2,6 +2,7 @@ package jersey.companies.startup;
 
 import io.swagger.jaxrs.config.BeanConfig;
 import io.swagger.models.Info;
+import jersey.companies.resources.AltService;
 import jersey.companies.resources.CompanyService;
 import jersey.companies.resources.ICompanyService;
 import ta.microservices.common.service.lifecycle.JerseyConfig;
@@ -36,6 +37,7 @@ public class AppConfig extends JerseyConfig {
     }
 
     private void RegisterMyServices() {
+        register(AltService.class);
         register(CompanyService.class, ICompanyService.class);
     }
 }

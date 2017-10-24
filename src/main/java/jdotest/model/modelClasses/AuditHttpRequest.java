@@ -31,9 +31,9 @@ public class AuditHttpRequest {
     @SuppressWarnings("FieldMayBeFinal")
     private HttpRequestSourceType requestSourceType;
    
-    public AuditHttpRequest(long auditId, AuditHttpRequestsMapBase httpRequest) {
-        this.AuditId = auditId;
-        this.ServiceInstanceId = httpRequest.getServiceInstanceId();
+    public AuditHttpRequest(Audit instanceAudit, Audit requestAudit, AuditHttpRequestsMapBase httpRequest) {
+        this.AuditId = requestAudit.getId();
+        this.ServiceInstanceId = instanceAudit.getId();
         this.url = httpRequest.getURI().toString();
         this.body = httpRequest.getBody();
         this.requestType = httpRequest.getRequestType();

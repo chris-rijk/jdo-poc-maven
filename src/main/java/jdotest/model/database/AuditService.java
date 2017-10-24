@@ -12,7 +12,6 @@ import jdotest.dto.AuditServiceInstancesMap;
 import jdotest.dto.DiagnosticAuditMap;
 import jdotest.dto.enums.AuditType;
 import jdotest.dto.enums.NameValuePairType;
-import jdotest.model.interfaces.IAuditHttpRequestsService;
 import jdotest.model.interfaces.IAuditInstancesService;
 import jdotest.model.interfaces.IAuditService;
 import jdotest.model.modelClasses.Audit;
@@ -27,12 +26,6 @@ public class AuditService implements IAuditService {
     public IAuditInstancesService CreateInstancesAudit() {
         Audit audit = CreateAuditInstance(AuditType.ServiceInstance);
         return new AuditInstancesService(audit);
-    }
-
-    @Override
-    public IAuditHttpRequestsService CreateHttpRequest() {
-        Audit audit = CreateAuditInstance(AuditType.HttpRequest);
-        return new AuditHttpRequestsService(audit);
     }
 
     private Audit CreateAuditInstance(AuditType type) {

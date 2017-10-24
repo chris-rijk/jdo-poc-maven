@@ -54,12 +54,13 @@ public class AuditHttpRequestsServiceTest {
 
         IAuditService auditService = new AuditService();
         IAuditInstancesService instancesService = auditService.CreateInstancesAudit();
-        IAuditHttpRequestsService requestsService = auditService.CreateHttpRequest();
+        IAuditHttpRequestsService requestsService = instancesService.CreateHttpRequest();
         
         AuditServiceInstancesMap serviceInstance = instancesService.StartInstancesAudit(new AuditServiceInstancesMapBase("ip address", "docker"));
-
+        assertNotNull(serviceInstance);
+        
         Instant before = Instant.now();
-        AuditHttpRequestMap httpRequest = requestsService.StartHttpRequest(new AuditHttpRequestsMapBase(serviceInstance.getAuditId(), "url", "body", HttpRequestType.Unknown, HttpRequestSourceType.Test));
+        AuditHttpRequestMap httpRequest = requestsService.StartHttpRequest(new AuditHttpRequestsMapBase("url", "body", HttpRequestType.Unknown, HttpRequestSourceType.Test));
         Instant after = Instant.now();
        
         assertTrue(httpRequest.getAuditId() > 0);

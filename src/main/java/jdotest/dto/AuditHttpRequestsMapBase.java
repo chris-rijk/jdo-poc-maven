@@ -8,15 +8,13 @@ import jdotest.dto.enums.HttpRequestType;
 
 public class AuditHttpRequestsMapBase {
 
-    private final long ServiceInstanceId;
     private final String url;
     private final URI uri;
     private final String body;
     private final HttpRequestType requestType;
     private final HttpRequestSourceType requestSourceType;
 
-    private AuditHttpRequestsMapBase(long ServiceInstanceId, URI uri, String url, String body, HttpRequestType requestType, HttpRequestSourceType requestSourceType) {
-        this.ServiceInstanceId = ServiceInstanceId;
+    private AuditHttpRequestsMapBase(URI uri, String url, String body, HttpRequestType requestType, HttpRequestSourceType requestSourceType) {
         this.uri = uri;
         this.url = url;
         this.body = body;
@@ -24,16 +22,12 @@ public class AuditHttpRequestsMapBase {
         this.requestSourceType = requestSourceType;
     }
 
-    public AuditHttpRequestsMapBase(long ServiceInstanceId, URI uri, String body, HttpRequestType requestType, HttpRequestSourceType requestSourceType) {
-        this(ServiceInstanceId, uri, uri == null ? null : uri.toString(), body, requestType, requestSourceType);
+    public AuditHttpRequestsMapBase(URI uri, String body, HttpRequestType requestType, HttpRequestSourceType requestSourceType) {
+        this(uri, uri == null ? null : uri.toString(), body, requestType, requestSourceType);
     }
 
-    public AuditHttpRequestsMapBase(long ServiceInstanceId, String url, String body, HttpRequestType requestType, HttpRequestSourceType requestSourceType) {
-        this(ServiceInstanceId, toURI(url), url, body, requestType, requestSourceType);
-    }
-
-    public long getServiceInstanceId() {
-        return ServiceInstanceId;
+    public AuditHttpRequestsMapBase(String url, String body, HttpRequestType requestType, HttpRequestSourceType requestSourceType) {
+        this(toURI(url), url, body, requestType, requestSourceType);
     }
 
     public URI getURI() {
@@ -59,7 +53,6 @@ public class AuditHttpRequestsMapBase {
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 97 * hash + (int) (this.ServiceInstanceId ^ (this.ServiceInstanceId >>> 32));
         hash = 97 * hash + Objects.hashCode(this.url);
         hash = 97 * hash + Objects.hashCode(this.body);
         hash = 97 * hash + Objects.hashCode(this.requestType);
@@ -79,9 +72,6 @@ public class AuditHttpRequestsMapBase {
             return false;
         }
         final AuditHttpRequestsMapBase other = (AuditHttpRequestsMapBase) obj;
-        if (this.ServiceInstanceId != other.ServiceInstanceId) {
-            return false;
-        }
         if (!Objects.equals(this.body, other.body)) {
             return false;
         }

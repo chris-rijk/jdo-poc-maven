@@ -11,7 +11,6 @@ import jdotest.dto.enums.NameValuePairType;
 public interface IAuditService {
     
     IAuditInstancesService CreateInstancesAudit();
-    IAuditHttpRequestsService CreateHttpRequest();
     
     AuditHttpRequestMap GetHttpRequest(long auditId) throws JDOObjectNotFoundException;
     AuditServiceInstancesMap GetInstancesAudit(long auditId) throws JDOObjectNotFoundException;

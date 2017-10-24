@@ -8,12 +8,14 @@ import jdotest.dto.enums.HttpRequestType;
 
 public class AuditHttpRequestMap extends AuditHttpRequestsMapBase {
 
+    private final long ServiceInstanceId;
     private final long AuditId;
     private final Instant CreateDateTime;
     private final AuditType AuditType;
 
     public AuditHttpRequestMap(long AuditId, Instant CreateDateTime, AuditType AuditType, long ServiceInstanceId, String url, String body, HttpRequestType requestType, HttpRequestSourceType requestSourceType) {
-        super(ServiceInstanceId, url, body, requestType, requestSourceType);
+        super(url, body, requestType, requestSourceType);
+        this.ServiceInstanceId = ServiceInstanceId;
         this.AuditId = AuditId;
         this.CreateDateTime = CreateDateTime;
         this.AuditType = AuditType;

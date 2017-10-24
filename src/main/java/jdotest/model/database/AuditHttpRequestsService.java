@@ -12,15 +12,18 @@ import jdotest.model.modelClasses.AuditHttpResponse;
 
 public class AuditHttpRequestsService extends AuditHandlerCommon implements IAuditHttpRequestsService {
 
-    public AuditHttpRequestsService(Audit audit) {
-        super(audit);
+    private final Audit instanceAudit;
+    
+    public AuditHttpRequestsService(Audit instanceAudit, Audit requestAudit) {
+        super(requestAudit);
+        this.instanceAudit = instanceAudit;
     }
 
     @Override
     public AuditHttpRequestMap StartHttpRequest(AuditHttpRequestsMapBase httpRequest) {
         AuditHttpRequestMap ret;
         try (PersistenceManager pm = DatabaseConfiguration.getPersistenceManager()) {
-            AuditHttpRequest req = new AuditHttpRequest(auditId, httpRequest);
+            AuditHttpRequest req = new AuditHttpRequest(instanceAudit, audit, httpRequest);
             pm.makePersistent(req);
             ret = req.toAuditHttpRequestsMap(audit);
         }
