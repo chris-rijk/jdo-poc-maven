@@ -18,19 +18,24 @@ package jersey.companies;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.glassfish.grizzly.http.server.HttpServer;
-import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
-import org.glassfish.jersey.server.ResourceConfig;
-
+import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
+import io.swagger.jaxrs.config.BeanConfig;
+import io.swagger.models.Info;
 import java.io.IOException;
 import java.net.URI;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import jdotest.dto.AuditServiceInstancesMap;
+import jdotest.dto.AuditServiceInstancesMapBase;
+import jdotest.model.database.AuditService;
+import jdotest.model.interfaces.IAuditInstancesService;
+import jdotest.model.interfaces.IAuditService;
 import jersey.companies.resources.CompanyService;
-import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
-import io.swagger.jaxrs.config.BeanConfig;
-import io.swagger.models.Info;
 import jersey.companies.resources.ICompanyService;
+import org.glassfish.grizzly.http.server.HttpServer;
+import org.glassfish.hk2.utilities.binding.AbstractBinder;
+import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
+import org.glassfish.jersey.server.ResourceConfig;
 
 /**
  * This is the example entry point, where Jersey application for the example
@@ -40,7 +45,7 @@ import jersey.companies.resources.ICompanyService;
  */
 public class App {
 
-    private static final URI BASE_URI = URI.create("http://localhost:8080/");
+    private static final URI BASE_URI = URI.create("http://localhost:8888/");
     /**
      * "Hello World" root resource path.
      */
@@ -83,7 +88,11 @@ public class App {
      * @return initialized resource configuration of the example application.
      */
     public static ResourceConfig create() {
-        String resources = "org.glassfish.jersey.examples.helloworld.resources";
+        IAuditService auditService = new AuditService();
+        IAuditInstancesService instancesService = auditService.CreateInstancesAudit();
+        AuditServiceInstancesMap serviceInstance = instancesService.StartInstancesAudit(new AuditServiceInstancesMapBase("ip address", "docker"));
+        
+        String resources = "jersey.companies.resources";
         BeanConfig beanConfig = new BeanConfig();
         beanConfig.setVersion("1.0");
         beanConfig.setSchemes(new String[]{"http"});
@@ -117,12 +126,12 @@ public class App {
 
         resourceConfig.register(CompanyService.class, ICompanyService.class);
 
-//        resourceConfig.register(new AbstractBinder() {
-//            @Override
-//            protected void configure() {
-//                bind(CompanyService.class).to(ICompanyService.class);
-//            }
-//        });
+        resourceConfig.register(new AbstractBinder() {
+            @Override
+            protected void configure() {
+                bind(instancesService).to(IAuditInstancesService.class);
+            }
+        });
         return resourceConfig;
     }
 }

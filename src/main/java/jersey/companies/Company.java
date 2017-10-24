@@ -17,8 +17,9 @@ public class Company extends CompanyBase {
     public Company() {
     }
 
-    public Company(String name, String platform) {
+    public Company(long id, String name, String platform) {
         super(name, platform);
+        this.id = id;
         this.createDate = Instant.now();
         this.lastModified = Instant.now();
     }
