@@ -18,8 +18,9 @@ public class RequestAuditing {
     private static final String CONTEXT_KEY = "ta.microservices.common.service.lifecycle.RequestAuditing";
     private final IAuditHttpRequestsService requestService;
     private final URI path;
-    private String body;
-    private HttpRequestSourceType source;
+    private final String body;
+    private final HttpRequestSourceType source;
+    private boolean hasStartedRequest = false;
 
     public RequestAuditing(ContainerRequestContext requestContext, IAuditHttpRequestsService requestService, String body) {
         this.requestService = requestService;
@@ -41,10 +42,21 @@ public class RequestAuditing {
     }
     
     public void StartHttpRequest(HttpRequestType requestType) {
+        if (hasStartedRequest) {
+            throw new RuntimeException("Already started request"); // TODO:
+        }
+        hasStartedRequest = true;
         requestService.StartHttpRequest(new AuditHttpRequestsMapBase(path, body, requestType, source));
     }
     
+    public boolean getHasStartedRequest() {
+        return hasStartedRequest;
+    }
+    
     public void SetHttpResponse(HttpResponseType response, int statusCode, String body, Map<String,String> headers) {
+        if (!hasStartedRequest) {
+            throw new RuntimeException("Not started request"); // TODO:
+        }
         requestService.SetHttpResponse(new AuditHttpResponseMapBase(response, statusCode, body));
         requestService.SetAuditNameValuePairs(NameValuePairType.HttpResponseHeaders, headers);
     }

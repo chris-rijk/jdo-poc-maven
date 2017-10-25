@@ -37,7 +37,7 @@ public class CompanyEndpoint implements ICompanyEndpoint {
     @Override
     public Company get(long companyId) {
         RequestAuditing ra = RequestAuditing.GetFromContext(requestCtx);
-        ra.StartHttpRequest(HttpRequestType.ComapanyGet);
+        ra.StartHttpRequest(HttpRequestType.CompanyGet);
         addMetadataHeaders();
 
         CompanyMap c = null;
@@ -51,12 +51,17 @@ public class CompanyEndpoint implements ICompanyEndpoint {
 
     @Override
     public Company create(CompanyBase company) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        RequestAuditing ra = RequestAuditing.GetFromContext(requestCtx);
+        ra.StartHttpRequest(HttpRequestType.CompanyCreate);
+        CompanyMap c = companyService.CreateCompany(company.toMap());
+        return new Company(c);
     }
 
     @Override
     public void update(long companyId, CompanyBase company) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        RequestAuditing ra = RequestAuditing.GetFromContext(requestCtx);
+        ra.StartHttpRequest(HttpRequestType.CompanyCreate);
+        companyService.UpdateCompany(companyId, company.toMap());
     }
 
     private void addMetadataHeaders() {
@@ -70,6 +75,9 @@ public class CompanyEndpoint implements ICompanyEndpoint {
 
     @Override
     public PagedCompanies search(Integer isEnabled, String subscriptionId, Integer skip, Integer take) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        RequestAuditing ra = RequestAuditing.GetFromContext(requestCtx);
+        ra.StartHttpRequest(HttpRequestType.CompanySearch);
+        // TODO:
+        return null;
     }
 }

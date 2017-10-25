@@ -6,6 +6,7 @@ import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerResponseContext;
 import javax.ws.rs.container.ContainerResponseFilter;
 import javax.ws.rs.ext.Provider;
+import jdotest.dto.enums.HttpRequestType;
 import jdotest.dto.enums.HttpResponseType;
 import ta.microservices.common.service.lifecycle.RequestAuditing;
 import ta.microservices.common.utils.MultimapToMap;
@@ -18,6 +19,10 @@ public class RequestResponseAuditingFilter implements ContainerResponseFilter {
         RequestAuditing ra = RequestAuditing.GetFromContext(requestContext);
         if (ra == null) {
             return;
+        }
+        
+        if (!ra.getHasStartedRequest()) {
+            ra.StartHttpRequest(HttpRequestType.Unknown);
         }
         
         Map<String,String> headers = MultimapToMap.ToMap(responseContext.getStringHeaders());

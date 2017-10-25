@@ -1,6 +1,8 @@
 package jersey.companies;
 
 import io.swagger.annotations.ApiModelProperty;
+import jdotest.dto.CompanyMapBase;
+import jdotest.dto.enums.CompanyStatusType;
 
 /**
  *
@@ -35,4 +37,7 @@ public class CompanyBase {
         return disabled;
     }
 
+    public CompanyMapBase toMap() {
+        return new CompanyMapBase(name, disabled ? CompanyStatusType.Enabled : CompanyStatusType.Enabled, platform);
+    }
 }
