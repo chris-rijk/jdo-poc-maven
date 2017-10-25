@@ -8,6 +8,8 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import jdotest.dto.CompanyMap;
+import jdotest.dto.CompanySearchMap;
+import jdotest.dto.PagedListMap;
 import jdotest.dto.enums.HttpRequestType;
 import jdotest.model.interfaces.IAuditInstancesService;
 import jdotest.model.interfaces.ICompanyService;
@@ -74,10 +76,10 @@ public class CompanyEndpoint implements ICompanyEndpoint {
     }
 
     @Override
-    public PagedCompanies search(Integer isEnabled, String subscriptionId, Integer skip, Integer take) {
+    public PagedCompanies search(String name, Boolean isEnabled, String subscriptionId, Integer skip, Integer take) {
         RequestAuditing ra = RequestAuditing.GetFromContext(requestCtx);
         ra.StartHttpRequest(HttpRequestType.CompanySearch);
-        // TODO:
-        return null;
+        PagedListMap<CompanyMap> list = companyService.SearchCompanies(new CompanySearchMap(name, isEnabled, subscriptionId, skip, take));
+        return new PagedCompanies(list);
     }
 }

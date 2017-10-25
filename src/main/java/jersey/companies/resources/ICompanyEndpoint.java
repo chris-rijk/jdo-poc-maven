@@ -72,8 +72,10 @@ public interface ICompanyEndpoint {
         @ApiResponse(code = 500, message = "Internal server error")}
     )
     PagedCompanies search(
+            @ApiParam(name = "name", value = "If not null then search for any companies matching this name", required = false)
+            @QueryParam("name") String name,
             @ApiParam(name = "isEnabled", value = "If true then only return companies that are enabled", required = false)
-            @QueryParam("isEnabled") Integer isEnabled,
+            @QueryParam("isEnabled") Boolean isEnabled,
             @ApiParam(name = "subscriptionId", value = "If set then only return companies that match this subscription ID", required = false)
             @QueryParam("subscriptionId") String subscriptionId,
             @ApiParam(name = "skip", value = "If set then ignore the first [skip] number of results", required = false)

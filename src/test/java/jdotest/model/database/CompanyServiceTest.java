@@ -1,8 +1,11 @@
 package jdotest.model.database;
 
+import java.util.UUID;
 import javax.jdo.JDOObjectNotFoundException;
 import jdotest.dto.CompanyMap;
 import jdotest.dto.CompanyMapBase;
+import jdotest.dto.CompanySearchMap;
+import jdotest.dto.PagedListMap;
 import jdotest.dto.enums.CompanyStatusType;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -88,5 +91,57 @@ public class CompanyServiceTest {
         } catch (JDOObjectNotFoundException ex) {
             assertNotNull(ex);
         }
+    }
+
+    @Test
+    public void testSearchCompanies_UnknownName_ReturnsEmpty() {
+        System.out.println("GetCompany");
+        CompanyService instance = new CompanyService();
+        PagedListMap<CompanyMap> result = instance.SearchCompanies(new CompanySearchMap("!!name!!", null, null, null, null));
+        assertNotNull(result);
+        assertEquals(0, result.getTotal());
+    }
+    
+    @Test
+    public void testSearchCompanies() {
+        String name1 = UUID.randomUUID().toString();
+        String name2 = UUID.randomUUID().toString();
+        String platform1 = UUID.randomUUID().toString();
+        String platform2 = UUID.randomUUID().toString();
+        
+        CompanyService instance = new CompanyService();
+        CompanyMap company1 = instance.CreateCompany(new CompanyMapBase(name1, CompanyStatusType.Enabled, platform1));
+        CompanyMap company2 = instance.CreateCompany(new CompanyMapBase(name2, CompanyStatusType.Disabled, platform2));
+        
+        PagedListMap<CompanyMap> searchAll = instance.SearchCompanies(new CompanySearchMap(null, null, null, null, null));
+        PagedListMap<CompanyMap> searchName = instance.SearchCompanies(new CompanySearchMap(name1, null, null, null, null));
+        PagedListMap<CompanyMap> searchEnabled = instance.SearchCompanies(new CompanySearchMap(null, true, null, null, null));
+        PagedListMap<CompanyMap> searchDisabled = instance.SearchCompanies(new CompanySearchMap(null, false, null, null, null));
+        PagedListMap<CompanyMap> searchPlatform = instance.SearchCompanies(new CompanySearchMap(null, null, platform1, null, null));
+        PagedListMap<CompanyMap> searchMulti = instance.SearchCompanies(new CompanySearchMap(name1, true, platform1, null, null));
+        
+        assertTrue(searchAll.getTotal() >= 2);
+        assertTrue(searchAll.getList().contains(company1));
+        assertTrue(searchAll.getList().contains(company2));
+
+        assertTrue(searchName.getTotal() >= 1);
+        assertTrue(searchName.getList().contains(company1));
+        assertFalse(searchName.getList().contains(company2));
+
+        assertTrue(searchEnabled.getTotal() >= 1);
+        assertTrue(searchEnabled.getList().contains(company1));
+        assertFalse(searchEnabled.getList().contains(company2));
+
+        assertTrue(searchDisabled.getTotal() >= 1);
+        assertFalse(searchDisabled.getList().contains(company1));
+        assertTrue(searchDisabled.getList().contains(company2));
+
+        assertTrue(searchPlatform.getTotal() >= 1);
+        assertTrue(searchPlatform.getList().contains(company1));
+        assertFalse(searchPlatform.getList().contains(company2));
+
+        assertTrue(searchMulti.getTotal() >= 1);
+        assertTrue(searchMulti.getList().contains(company1));
+        assertFalse(searchMulti.getList().contains(company2));
     }
 }
