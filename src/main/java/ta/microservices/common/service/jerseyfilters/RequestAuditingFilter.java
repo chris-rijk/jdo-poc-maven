@@ -32,7 +32,7 @@ public class RequestAuditingFilter implements ContainerRequestFilter {
             body = readEntityStream(requestContext);
         }
 
-        RequestAuditing ra = new RequestAuditing(requestContext, requestService, body);
+        RequestAuditing ra = new RequestAuditing(requestContext, requestService, body, instancesService.GetAuditId());
         ra.SetFromContext(requestContext);
         requestService.SetAuditNameValuePairs(NameValuePairType.HttpRequestHeaders, MultimapToMap.ToMap(requestContext.getHeaders()));
     }

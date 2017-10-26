@@ -1,9 +1,5 @@
 package ta.microservices.common.service.lifecycle;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 import java.time.Instant;
 import jdotest.dto.DiagnosticAuditMapBase;
 import jdotest.dto.enums.DiagnosticType;
@@ -11,6 +7,7 @@ import jdotest.model.interfaces.IAuditInstancesService;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
+import ta.microservices.common.service.jerseyfilters.CustomMessageBodyWriter;
 import ta.microservices.common.service.jerseyfilters.ExceptionMappingThrowable;
 import ta.microservices.common.service.jerseyfilters.RequestAuditingFilter;
 import ta.microservices.common.service.jerseyfilters.RequestResponseAuditingFilter;
@@ -33,6 +30,7 @@ public class JerseyConfig extends ResourceConfig {
     protected void RegisterRequestAuditingFilter() {
         register(RequestAuditingFilter.class);
         register(RequestResponseAuditingFilter.class);
+        register(CustomMessageBodyWriter.class);
     }
 
     protected void RegisterExceptionMappers() {
@@ -48,14 +46,7 @@ public class JerseyConfig extends ResourceConfig {
     }
 
     protected void RegisterSerializer() {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.enable(SerializationFeature.INDENT_OUTPUT);
-        JavaTimeModule module = new JavaTimeModule();
-        mapper.registerModule(module);
-        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-        JacksonJaxbJsonProvider provider = new JacksonJaxbJsonProvider();
-        provider.setMapper(mapper);
-        register(provider);
+        register(JsonSerialisation.getProvider());
     }
 
     protected void RegisterSwagger() {

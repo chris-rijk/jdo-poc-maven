@@ -1,13 +1,12 @@
 package ta.microservices.common.service.jerseyfilters;
 
 import java.io.IOException;
-import java.util.Map;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerResponseContext;
 import javax.ws.rs.container.ContainerResponseFilter;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.Provider;
 import jdotest.dto.enums.HttpRequestType;
-import jdotest.dto.enums.HttpResponseType;
 import ta.microservices.common.service.lifecycle.RequestAuditing;
 import ta.microservices.common.utils.MultimapToMap;
 
@@ -20,13 +19,20 @@ public class RequestResponseAuditingFilter implements ContainerResponseFilter {
         if (ra == null) {
             return;
         }
-        
+
         if (!ra.getHasStartedRequest()) {
             ra.StartHttpRequest(HttpRequestType.Unknown);
         }
+
+        if (ra.getHasSetResponse()) {
+            responseContext.setStatusInfo(ra.getResponseStatus());
+        }
+
+        MultivaluedMap<String, Object> rawHeaders = responseContext.getHeaders();
+        rawHeaders.add("ServiceResponseTime", System.currentTimeMillis());
+        rawHeaders.add("ServiceInstanceId", ra.getServiceAuditId());
+        rawHeaders.add("HttpRequestAuditId", ra.getAuditId());
         
-        Map<String,String> headers = MultimapToMap.ToMap(responseContext.getStringHeaders());
-        String body = null; // TODO:
-        ra.SetHttpResponse(HttpResponseType.Success, responseContext.getStatus(), body, headers);
+        ra.SetHttpResponse(responseContext.getStatus(), MultimapToMap.ToMap(responseContext.getStringHeaders()));
     }
 }

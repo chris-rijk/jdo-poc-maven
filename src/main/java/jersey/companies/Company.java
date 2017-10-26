@@ -15,14 +15,7 @@ public class Company extends CompanyBase {
     @ApiModelProperty(required = true, value = "Last modified date", dataType = "dateTime")
     private Instant lastModified;
 
-    public Company() {
-    }
-
-    public Company(long id, String name, String platform) {
-        super(name, platform);
-        this.id = id;
-        this.createDate = Instant.now();
-        this.lastModified = Instant.now();
+    private Company() {
     }
 
     public Company(CompanyMap map) {
